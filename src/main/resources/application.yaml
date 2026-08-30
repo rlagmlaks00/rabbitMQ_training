@@ -5,5 +5,14 @@ spring:
     username: guest
     password: guest
 
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 3          # 최대 3번 시도
+          initial-interval: 1000ms # 첫 재시도까지 1초
+          multiplier: 2.0          # 재시도마다 대기시간 2배씩 증가 (1s → 2s → 4s)
+          max-interval: 10000ms    # 최대 대기시간 상한
+
   application:
     name: rabbitmq
