@@ -20,4 +20,14 @@ public class OrderProducer {
         );
         System.out.println("주문 이벤트 발행: " + event.orderId());
     }
+
+    // 팬아웃 이벤트 발행 테스트
+    public void fanoutOrderCreatedEvent(OrderCreatedEvent event) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConstants.FANOUT_EXCHANGE_NAME,
+            "",
+            event
+        );
+        System.out.println("팬아웃 주문 이벤트 발행: " + event.orderId());
+    }
 }
