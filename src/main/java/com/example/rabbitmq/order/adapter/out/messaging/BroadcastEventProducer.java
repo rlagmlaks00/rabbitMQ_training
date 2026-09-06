@@ -1,20 +1,20 @@
-package com.example.rabbitmq.order.producer;
+package com.example.rabbitmq.order.adapter.out.messaging;
 
 import com.example.rabbitmq.config.RabbitMQConstants;
-import com.example.rabbitmq.order.dto.OrderCreatedEvent;
+import com.example.rabbitmq.order.domain.model.OrderCreatedEvent;
+import com.example.rabbitmq.order.domain.port.out.OrderEventBroadcastPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-// order.fanout.exchange(fanout)로 발행 — 라우팅 키 없이 바인딩된 모든 큐(order.created.queue,
-// other.new.queue 등 여러 도메인)로 전달되는 브로드캐스트 발행 전용 Producer.
 @Service
 @RequiredArgsConstructor
-public class BroadcastEventProducer {
+public class BroadcastEventProducer implements OrderEventBroadcastPublisher {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void broadcastOrderCreatedEvent(OrderCreatedEvent event) {
+    @Override
+    public void publish(OrderCreatedEvent event) {
         rabbitTemplate.convertAndSend(
             RabbitMQConstants.FANOUT_EXCHANGE_NAME,
             "",

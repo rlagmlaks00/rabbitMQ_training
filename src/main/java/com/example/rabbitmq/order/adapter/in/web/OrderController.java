@@ -1,7 +1,7 @@
-package com.example.rabbitmq.order.controller;
+package com.example.rabbitmq.order.adapter.in.web;
 
-import com.example.rabbitmq.order.dto.OrderCreatedEvent;
-import com.example.rabbitmq.order.service.OrderService;
+import com.example.rabbitmq.order.domain.model.OrderCreatedEvent;
+import com.example.rabbitmq.order.domain.port.in.OrderUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,19 +12,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderUseCase orderUseCase;
 
     @PostMapping
     public String createOrder(@RequestParam String productName, @RequestParam int quantity) {
         String orderId = UUID.randomUUID().toString();
-        orderService.publish(new OrderCreatedEvent(orderId, productName, quantity));
+        orderUseCase.publish(new OrderCreatedEvent(orderId, productName, quantity));
         return "주문 접수됨: " + orderId;
     }
 
     @PostMapping("/fanout")
     public String createFanoutOrder(@RequestParam String productName, @RequestParam int quantity) {
         String orderId = UUID.randomUUID().toString();
-        orderService.fanoutPublish(new OrderCreatedEvent(orderId, productName, quantity));
+        orderUseCase.fanoutPublish(new OrderCreatedEvent(orderId, productName, quantity));
         return "팬아웃 주문 접수됨: " + orderId;
     }
 }

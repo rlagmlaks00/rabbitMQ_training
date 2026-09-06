@@ -1,3 +1,3 @@
-package com.example.rabbitmq.order.dto;
+package com.example.rabbitmq.order.domain.model;
 
 public record OrderCreatedEvent(String orderId, String productName, int quantity) {}
