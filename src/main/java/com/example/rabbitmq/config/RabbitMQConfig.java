@@ -14,7 +14,7 @@ public class RabbitMQConfig {
   // Jackson 3 기반 JSON 컨버터 + 역직렬화 화이트리스트
   @Bean
   public MessageConverter jsonMessageConverter() {
-    return new JacksonJsonMessageConverter("com.example.rabbitmq.messaging.dto");
+    return new JacksonJsonMessageConverter("com.example.rabbitmq.order.dto");
   }
 
   @Bean

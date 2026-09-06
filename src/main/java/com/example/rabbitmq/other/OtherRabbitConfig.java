@@ -1,4 +1,4 @@
-package com.example.rabbitmq.config;
+package com.example.rabbitmq.other;
 
 import org.springframework.amqp.core.Declarable;
 import org.springframework.amqp.core.Declarables;
@@ -13,7 +13,7 @@ import static com.example.rabbitmq.config.RabbitTopologySupport.binding;
 import static com.example.rabbitmq.config.RabbitTopologySupport.plainQueue;
 
 // ── Other 도메인: other.new.queue ──
-// order.fanout.exchange는 OrderRabbitConfig가 소유/선언하며, 여기서는 이름으로만 바인딩한다.
+// order.fanout.exchange는 order 패키지(OrderRabbitConfig)가 소유/선언하며, 여기서는 이름으로만 바인딩한다.
 // otherQueue는 실패해도 DLQ로 보내지 않음(plainQueue).
 @Configuration
 public class OtherRabbitConfig {

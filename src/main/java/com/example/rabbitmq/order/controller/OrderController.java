@@ -1,7 +1,7 @@
-package com.example.rabbitmq.controller;
+package com.example.rabbitmq.order.controller;
 
-import com.example.rabbitmq.messaging.dto.OrderCreatedEvent;
-import com.example.rabbitmq.service.OrderService;
+import com.example.rabbitmq.order.dto.OrderCreatedEvent;
+import com.example.rabbitmq.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

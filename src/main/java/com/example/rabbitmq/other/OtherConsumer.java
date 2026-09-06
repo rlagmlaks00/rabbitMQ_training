@@ -1,7 +1,7 @@
-package com.example.rabbitmq.messaging;
+package com.example.rabbitmq.other;
 
 import com.example.rabbitmq.config.RabbitMQConstants;
-import com.example.rabbitmq.messaging.dto.OrderCreatedEvent;
+import com.example.rabbitmq.order.dto.OrderCreatedEvent;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

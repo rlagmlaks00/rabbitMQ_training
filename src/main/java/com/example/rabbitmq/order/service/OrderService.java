@@ -1,8 +1,8 @@
-package com.example.rabbitmq.service;
+package com.example.rabbitmq.order.service;
 
-import com.example.rabbitmq.messaging.BroadcastEventProducer;
-import com.example.rabbitmq.messaging.OrderEventProducer;
-import com.example.rabbitmq.messaging.dto.OrderCreatedEvent;
+import com.example.rabbitmq.order.dto.OrderCreatedEvent;
+import com.example.rabbitmq.order.producer.BroadcastEventProducer;
+import com.example.rabbitmq.order.producer.OrderEventProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

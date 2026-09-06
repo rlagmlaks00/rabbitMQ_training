@@ -1,4 +1,4 @@
-package com.example.rabbitmq.config;
+package com.example.rabbitmq.order.config;
 
 import org.springframework.amqp.core.Declarable;
 import org.springframework.amqp.core.Declarables;
