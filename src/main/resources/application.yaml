@@ -6,6 +6,7 @@ spring:
 
     listener:
       simple:
+        # prefetch: 1  # 한 번에 1개씩만 배달 — 처리 중인 메시지 ack 전까지 나머지는 Ready로 대기
         retry:
           enabled: true
           max-attempts: 3          # 최대 3번 시도
