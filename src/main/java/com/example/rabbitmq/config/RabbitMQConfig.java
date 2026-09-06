@@ -27,11 +27,12 @@ public class RabbitMQConfig {
     return new TopicExchange(EXCHANGE_NAME);
   }
 
-  // 우편함(Queue) — durable: RabbitMQ 재시작해도 큐가 살아남음
+  // 우편함(Queue) — quorum: 클러스터 노드 간 Raft 복제로 노드 장애에도 큐 생존
   // + 배달 실패한 메시지를 DLX(order.dlx)로 넘기도록 지정 (DLQ 인자 포함)
   @Bean
   public Queue orderQueue() {
     return QueueBuilder.durable(QUEUE_NAME)
+        .quorum()
         .withArgument("x-dead-letter-exchange", DLX_NAME)
         .withArgument("x-dead-letter-routing-key", DLQ_ROUTING_KEY)
         .build();
@@ -51,10 +52,10 @@ public class RabbitMQConfig {
     return new DirectExchange(DLX_NAME);
   }
 
-  // 실패 우편물 보관함(DLQ, Dead Letter Queue)
+  // 실패 우편물 보관함(DLQ, Dead Letter Queue) — 마찬가지로 quorum queue로 구성
   @Bean
   public Queue dlq() {
-    return new Queue(DLQ_NAME, true);
+    return QueueBuilder.durable(DLQ_NAME).quorum().build();
   }
 
   // 실패 분류 규칙(Binding) — "order.failed" 라우팅 키는 DLQ로

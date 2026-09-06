@@ -6,57 +6,89 @@ services:
     hostname: rabbitmq1
     environment:
       - RABBITMQ_ERLANG_COOKIE=my_shared_secret_cookie   # 세 노드 모두 반드시 동일해야 함
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=change_me_in_prod
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     ports:
       - "5672:5672"
       - "15672:15672"
     volumes:
       - rabbitmq1_data:/var/lib/rabbitmq   # 볼륨 없으면 컨테이너 재시작 시 데이터 유실
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     networks:
       - rabbitmq_cluster
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
 
   rabbitmq2:
     image: rabbitmq:4.1-management
     hostname: rabbitmq2
     environment:
       - RABBITMQ_ERLANG_COOKIE=my_shared_secret_cookie
+    ports:
+      - "5673:5672"
+      - "15673:15672"
     depends_on:
-      - rabbitmq1
+      rabbitmq1:
+        condition: service_healthy
     volumes:
       - rabbitmq2_data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     networks:
       - rabbitmq_cluster
     command: >
       bash -c "
       rabbitmq-server -detached &&
-      sleep 10 &&
+      until rabbitmqctl await_startup; do sleep 2; done &&
       rabbitmqctl stop_app &&
       rabbitmqctl join_cluster rabbit@rabbitmq1 &&
       rabbitmqctl start_app &&
       tail -f /dev/null
       "
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
 
   rabbitmq3:
     image: rabbitmq:4.1-management
     hostname: rabbitmq3
     environment:
       - RABBITMQ_ERLANG_COOKIE=my_shared_secret_cookie
+    ports:
+      - "5674:5672"
+      - "15674:15672"
     depends_on:
-      - rabbitmq1
+      rabbitmq1:
+        condition: service_healthy
     volumes:
       - rabbitmq3_data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     networks:
       - rabbitmq_cluster
     command: >
       bash -c "
       rabbitmq-server -detached &&
-      sleep 15 &&
+      until rabbitmqctl await_startup; do sleep 2; done &&
       rabbitmqctl stop_app &&
       rabbitmqctl join_cluster rabbit@rabbitmq1 &&
       rabbitmqctl start_app &&
       tail -f /dev/null
       "
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
 
 networks:
   rabbitmq_cluster:

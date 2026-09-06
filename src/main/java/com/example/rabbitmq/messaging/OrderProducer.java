@@ -3,14 +3,14 @@ package com.example.rabbitmq.messaging;
 import com.example.rabbitmq.config.RabbitMQConfig;
 import com.example.rabbitmq.messaging.dto.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class OrderProducer {
 
-    private final AmqpTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     public void sendOrderCreatedEvent(OrderCreatedEvent event) {
         rabbitTemplate.convertAndSend(
