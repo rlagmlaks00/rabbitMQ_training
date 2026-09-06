@@ -1,6 +1,6 @@
 package com.example.rabbitmq.messaging;
 
-import com.example.rabbitmq.config.RabbitMQConfig;
+import com.example.rabbitmq.config.RabbitMQConstants;
 import com.example.rabbitmq.messaging.dto.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -14,8 +14,8 @@ public class OrderProducer {
 
     public void sendOrderCreatedEvent(OrderCreatedEvent event) {
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE_NAME,
-                RabbitMQConfig.ROUTING_KEY,
+                RabbitMQConstants.EXCHANGE_NAME,
+                RabbitMQConstants.ROUTING_KEY,
                 event
         );
         System.out.println("주문 이벤트 발행: " + event.orderId());
