@@ -1,6 +1,7 @@
 package com.example.rabbitmq.service;
 
-import com.example.rabbitmq.messaging.OrderProducer;
+import com.example.rabbitmq.messaging.BroadcastEventProducer;
+import com.example.rabbitmq.messaging.OrderEventProducer;
 import com.example.rabbitmq.messaging.dto.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,13 +10,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderService {
 
-  private final OrderProducer orderProducer;
+  private final OrderEventProducer orderEventProducer;
+  private final BroadcastEventProducer broadcastEventProducer;
 
   public void publish(OrderCreatedEvent event) {
     int publish_cnt = event.quantity();
 
     for(int i = 0; i < publish_cnt; i++) {
-      orderProducer.sendOrderCreatedEvent(event);
+      orderEventProducer.sendOrderCreatedEvent(event);
     }
   }
 
@@ -23,7 +25,7 @@ public class OrderService {
     int publish_cnt = event.quantity();
 
     for(int i = 0; i < publish_cnt; i++) {
-      orderProducer.fanoutOrderCreatedEvent(event);
+      broadcastEventProducer.broadcastOrderCreatedEvent(event);
     }
   }
 }

@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+// order.exchange(topic)로만 발행 — order.created.queue(주문 도메인) 한 곳만 수신한다.
 @Service
 @RequiredArgsConstructor
-public class OrderProducer {
+public class OrderEventProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -19,15 +20,5 @@ public class OrderProducer {
                 event
         );
         System.out.println("주문 이벤트 발행: " + event.orderId());
-    }
-
-    // 팬아웃 이벤트 발행 테스트
-    public void fanoutOrderCreatedEvent(OrderCreatedEvent event) {
-        rabbitTemplate.convertAndSend(
-            RabbitMQConstants.FANOUT_EXCHANGE_NAME,
-            "",
-            event
-        );
-        System.out.println("팬아웃 주문 이벤트 발행: " + event.orderId());
     }
 }
